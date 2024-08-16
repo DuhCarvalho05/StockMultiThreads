@@ -1,8 +1,12 @@
 import model.Product;
 import model.Stock;
+import model.ThreadRemove;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args){
         Stock stock = Stock.getInstance();
 
         stock.addProduct(new Product(1, "Vasco", 13L, 16.77));
@@ -10,37 +14,27 @@ public class Main {
         stock.addProduct(new Product(3, "Bragantino", 2L, 16.77));
         stock.addProduct(new Product(4, "Avai", 9L, 16.77));
 
+        List<Thread> threads = new ArrayList<>();
 
-        new Thread() {
-            @Override
-            public void run() {
-                stock.updateProductQuantity(1, 3);
-                System.out.println("Removendo produto 1 por: " + this.getName() + ". Quantidade: " + stock.getProductById(1).getQuantity());
-            }
-        }.start();
+        System.out.println(stock.toString());
 
-        new Thread() {
-            @Override
-            public void run() {
-                stock.updateProductQuantity(2, 2);
-                System.out.println("Removendo produto 2 por: " + this.getName() + ". Quantidade: " + stock.getProductById(1).getQuantity());
-            }
-        }.start();
+        threads.add(new ThreadRemove(stock,1, 3));
+        threads.add(new ThreadRemove(stock, 2, 2));
+        threads.add(new ThreadRemove(stock,3, 1));
 
-        new Thread() {
-            @Override
-            public void run() {
-                stock.updateProductQuantity(3, 1);
-                System.out.println("Removendo produto 3 por: " + this.getName() + ". Quantidade: " + stock.getProductById(1).getQuantity());
-            }
-        }.start();
+        for (Thread t: threads){
+            t.start();
 
-        new Thread() {
-            @Override
-            public void run() {
-                stock.updateProductQuantity(4, 2);
-                System.out.println("Removendo produto 4 por: " + this.getName() + ". Quantidade: " + stock.getProductById(1).getQuantity());
+            try{
+                t.join();
+            }catch (Exception e){
+                e.getMessage();
             }
-        }.start();
+
+        }
+        System.out.println(stock.toString());
+
+
+
     }
 }

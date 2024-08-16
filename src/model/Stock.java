@@ -67,4 +67,18 @@ public class Stock {
         return false;
     }
 
+    @Override
+    public String toString() {
+
+       var str =  new StringBuilder("STOCK: {");
+
+       for (Product p : stockList){
+          str.append(p);
+       }
+
+       str.append("}");
+
+       return str.toString();
+    }
 }
+
